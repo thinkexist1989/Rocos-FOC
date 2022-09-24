@@ -79,7 +79,17 @@ static void MX_CAN_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+uint16_t SPI_AS5048A_ReadData(void)
+{
+    uint16_t angle_value;
+    uint16_t command = 0xFFFF;
+    HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_RESET); //cs片选
+    HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)&command, (uint8_t*)&angle_value, 1, 100);
+    HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_SET); //cs取消片选
+    angle_value = angle_value & 0x3FFF;
 
+    return angle_value;
+}
 /* USER CODE END 0 */
 
 /**
@@ -136,13 +146,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-      if(get_data_flag) {
-          usb_printf("get data:\r\n%s %d\r\n", buf, data_nums);
-          get_data_flag = 0;
-      }
-      usb_printf("usb test\r\n");
+//      if(get_data_flag) {
+//          usb_printf("get data:\r\n%s %d\r\n", buf, data_nums);
+//          get_data_flag = 0;
+//      }
+      float angle = SPI_AS5048A_ReadData() /16383.0 * 360.0;
+      usb_printf("Angle is: %.4f\r\n", angle);
 
-      HAL_Delay(500);
+      HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }
@@ -365,11 +376,11 @@ static void MX_SPI1_Init(void)
   hspi1.Instance = SPI1;
   hspi1.Init.Mode = SPI_MODE_MASTER;
   hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi1.Init.DataSize = SPI_DATASIZE_16BIT;
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -581,7 +592,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(DRV_EN_GPIO_Port, DRV_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SPI2_CS_GPIO_Port, SPI2_CS_Pin, GPIO_PIN_RESET);
