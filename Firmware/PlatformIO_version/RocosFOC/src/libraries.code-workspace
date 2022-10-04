@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "F:/Deng-s-foc-controller-master/Arduino IDE for Deng FOC/Arduino-1.8.19-DengFOC/libraries"
+		},
+		{
+			"name": "RocosFOC",
+			"path": ".."
+		}
+	],
+	"settings": {}
+}
