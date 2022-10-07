@@ -8,7 +8,7 @@
  */
 enum Direction : int8_t {
     CW      = 1,  // clockwise
-    CCW     = -1, // counter clockwise
+    CCW     = -1, // counterclockwise
     UNKNOWN = 0   // not yet known or invalid state
 };
 

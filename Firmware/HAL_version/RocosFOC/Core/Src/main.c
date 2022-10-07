@@ -64,8 +64,7 @@ uint8_t get_data_flag;
 uint8_t buf[200];
 uint32_t data_nums=0;
 
-// 定时器中断计数，类似于系统嘀嗒计数的用法
-// 使用volatile修饰是为了保证编译器优化的时候确保不会将它优化掉
+//!< for timestamp_us
 static volatile unsigned long timer_counter = 0;
 
 /* USER CODE END PV */
@@ -91,17 +90,7 @@ static void MX_RTC_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint16_t SPI_AS5048A_ReadData(void)
-{
-    uint16_t angle_value;
-    uint16_t command = 0xFFFF;
-    HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_RESET); //cs片�??
-    HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)&command, (uint8_t*)&angle_value, 1, 100);
-    HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_SET); //cs取消片�??
-    angle_value = angle_value & 0x3FFF;
 
-    return angle_value;
-}
 /* USER CODE END 0 */
 
 /**
@@ -133,25 +122,19 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_ADC1_Init();
-//  MX_I2C1_Init();
-//  MX_I2C2_Init();
+  MX_I2C1_Init();
+  MX_I2C2_Init();
   MX_SPI1_Init();
-//  MX_SPI2_Init();
+  MX_SPI2_Init();
   MX_TIM1_Init();
   MX_TIM3_Init();
-//  MX_USART2_UART_Init();
+  MX_USART2_UART_Init();
   MX_USB_DEVICE_Init();
   MX_CAN_Init();
   MX_DMA_Init();
   MX_TIM4_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-  // USB Can not be used with CAN at same time. MX_CAN_Init()HAL_CAN_DeInit()
-  if (HAL_CAN_DeInit(&hcan) != HAL_OK)
-  {
-      Error_Handler();
-  }
-
   //!< start pwm
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1); // Motor A
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2); // Motor B
@@ -159,7 +142,9 @@ int main(void)
   //!< for delay_us
   HAL_TIM_Base_Start(&htim4);
 
-  /* USER CODE END 2 */
+  TaskSetup();
+
+    /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -168,17 +153,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-      if(get_data_flag) {
-          usb_printf("get data:\r\n%s %d\r\n", buf, data_nums);
-          get_data_flag = 0;
-      }
-      float angle = SPI_AS5048A_ReadData() /16383.0 * 360.0;
-      usb_printf("Angle is: %.4f\r\n", angle);
-
-      HAL_GPIO_WritePin(DRV_EN_GPIO_Port, DRV_EN_Pin, GPIO_PIN_SET);
-
-      _writeDutyCycle3PWM(0.5, 0.2, 0.3);
-      HAL_Delay(1000);
+    TaskDo();
 
   }
   /* USER CODE END 3 */
@@ -322,7 +297,11 @@ static void MX_CAN_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN_Init 2 */
-
+    //!< USB Can not be used with CAN at same time. MX_CAN_Init()HAL_CAN_DeInit()
+    if (HAL_CAN_DeInit(&hcan) != HAL_OK)
+    {
+        Error_Handler();
+    }
   /* USER CODE END CAN_Init 2 */
 
 }
@@ -356,7 +335,11 @@ static void MX_I2C1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN I2C1_Init 2 */
-
+    //!< DeInit by Yang Luo
+    if (HAL_I2C_DeInit(&hi2c1) != HAL_OK)
+    {
+        Error_Handler();
+    }
   /* USER CODE END I2C1_Init 2 */
 
 }
@@ -390,7 +373,11 @@ static void MX_I2C2_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN I2C2_Init 2 */
-
+    //!< DeInit by Yang Luo
+    if (HAL_I2C_DeInit(&hi2c2) != HAL_OK)
+    {
+        Error_Handler();
+    }
   /* USER CODE END I2C2_Init 2 */
 
 }
@@ -524,7 +511,11 @@ static void MX_SPI2_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN SPI2_Init 2 */
-
+    //!< DeInit by Yang Luo
+    if (HAL_SPI_DeInit(&hspi2) != HAL_OK)
+    {
+        Error_Handler();
+    }
   /* USER CODE END SPI2_Init 2 */
 
 }
@@ -709,7 +700,11 @@ static void MX_USART2_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART2_Init 2 */
-
+    //!< DeInit by Yang Luo
+    if (HAL_UART_DeInit(&huart2) != HAL_OK)
+    {
+        Error_Handler();
+    }
   /* USER CODE END USART2_Init 2 */
 
 }

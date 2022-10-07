@@ -1,8 +1,6 @@
 #ifndef STEPPERDRIVER_H
 #define STEPPERDRIVER_H
 
-#include "drivers/hardware_api.h"
-
 class StepperDriver{
     public:
         

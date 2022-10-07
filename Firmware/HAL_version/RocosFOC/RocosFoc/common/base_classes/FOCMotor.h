@@ -1,7 +1,6 @@
 #ifndef FOCMOTOR_H
 #define FOCMOTOR_H
 
-//#include "Arduino.h"
 #include "Sensor.h"
 #include "CurrentSense.h"
 
@@ -10,6 +9,8 @@
 #include "../defaults.h"
 #include "../pid.h"
 #include "../lowpass_filter.h"
+
+#include "../Print.h"
 
 
 // monitoring bitmap
@@ -228,7 +229,7 @@ class FOCMotor
     CurrentSense* current_sense; 
 
     // monitoring functions
-//    Print* monitor_port; //!< Serial terminal variable if provided
+    Print* monitor_port; //!< Serial terminal variable if provided
   private:
     // monitor counting variable
     unsigned int monitor_cnt = 0 ; //!< counting variable

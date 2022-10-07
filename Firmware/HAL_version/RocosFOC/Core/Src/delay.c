@@ -9,6 +9,11 @@
 extern TIM_HandleTypeDef htim4;
 extern unsigned long timer_counter = 0;
 
+void delay_ms(unsigned long ms) {
+    HAL_Delay(ms);
+}
+
+
 void delay_us(unsigned long us) {
     __HAL_TIM_SetCounter(&htim4, 0);  // set the counter value a 0
     while (__HAL_TIM_GET_COUNTER(&htim4) < us); // wait for the counter to reach the us input in the parameter

@@ -32,6 +32,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "delay.h"
+#include "task.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -46,7 +47,29 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
+extern ADC_HandleTypeDef hadc1;
+extern DMA_HandleTypeDef hdma_adc1;
 
+extern CAN_HandleTypeDef hcan;
+
+extern I2C_HandleTypeDef hi2c1;
+extern I2C_HandleTypeDef hi2c2;
+
+extern RTC_HandleTypeDef hrtc;
+
+extern SPI_HandleTypeDef hspi1;
+extern SPI_HandleTypeDef hspi2;
+
+extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim4;
+
+extern UART_HandleTypeDef huart2;
+
+
+extern uint8_t get_data_flag;
+extern uint8_t buf[];
+extern uint32_t data_nums;
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -90,7 +113,7 @@ void _writeDutyCycle3PWM(float dc_a, float dc_b, float dc_c);
 #define PWM_B_Pin GPIO_PIN_5
 #define PWM_B_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-#define PWM_RANGE 1800 //!< 中心PWM计数�?1800 by Yang Luo
+#define PWM_RANGE 1800 //!< pwm range 1800 by Yang Luo
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
