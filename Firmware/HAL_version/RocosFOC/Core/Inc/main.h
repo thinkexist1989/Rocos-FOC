@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "delay.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -55,7 +55,7 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void _writeDutyCycle3PWM(float dc_a, float dc_b, float dc_c);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -90,7 +90,7 @@ void Error_Handler(void);
 #define PWM_B_Pin GPIO_PIN_5
 #define PWM_B_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-
+#define PWM_RANGE 1800 //!< 中心PWM计数�?1800 by Yang Luo
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

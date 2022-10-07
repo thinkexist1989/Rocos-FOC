@@ -38,7 +38,7 @@ void onMotor(char* cmd){ command.motor(&motor1,cmd); }      // 串口控制指�
 
 void setup() {
   //
-  driver1.pwm_frequency = 20000; // 20kHz
+  driver1.pwm_frequency = 10000; // 20kHz
   //
   driver1.voltage_power_supply = 12;
   driver1.voltage_limit = 12;
@@ -60,11 +60,12 @@ void loop() {
   // motor1.loopFOC();
 
   // iterative function setting the outter loop target
-  driver1.setPwm(3, 1, 5);
+  driver1.setPwm(5, 4, 3);
 
   // user communication
   // motor1.monitor();
 
   // command.run();
+  _delay(1000);
 
 }  

@@ -1,6 +1,6 @@
 #MicroXplorer Configuration settings - do not modify
 ADC1.Channel-0\#ChannelRegularConversion=ADC_CHANNEL_0
-ADC1.Channel-1\#ChannelRegularConversion=ADC_CHANNEL_0
+ADC1.Channel-1\#ChannelRegularConversion=ADC_CHANNEL_1
 ADC1.ContinuousConvMode=ENABLE
 ADC1.IPParameters=Rank-0\#ChannelRegularConversion,Channel-0\#ChannelRegularConversion,SamplingTime-0\#ChannelRegularConversion,NbrOfConversionFlag,master,ContinuousConvMode,Rank-1\#ChannelRegularConversion,Channel-1\#ChannelRegularConversion,SamplingTime-1\#ChannelRegularConversion,NbrOfConversion
 ADC1.NbrOfConversion=2
@@ -311,7 +311,7 @@ TIM3.Channel-PWM\ Generation1\ CH1=TIM_CHANNEL_1
 TIM3.Channel-PWM\ Generation2\ CH2=TIM_CHANNEL_2
 TIM3.Channel-PWM\ Generation3\ CH3=TIM_CHANNEL_3
 TIM3.CounterMode=TIM_COUNTERMODE_CENTERALIGNED1
-TIM3.IPParameters=Channel-PWM Generation1 CH1,Channel-PWM Generation2 CH2,Channel-PWM Generation3 CH3,CounterMode,Period,AutoReloadPreload,TIM_MasterSlaveMode
+TIM3.IPParameters=Channel-PWM Generation1 CH1,Channel-PWM Generation3 CH3,CounterMode,Period,AutoReloadPreload,TIM_MasterSlaveMode,Channel-PWM Generation2 CH2
 TIM3.Period=1800-1
 TIM3.TIM_MasterSlaveMode=TIM_MASTERSLAVEMODE_DISABLE
 TIM4.IPParameters=Prescaler,Period

@@ -40,7 +40,8 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc1;
+ ADC_HandleTypeDef hadc1;
+DMA_HandleTypeDef hdma_adc1;
 
 CAN_HandleTypeDef hcan;
 
@@ -65,11 +66,7 @@ uint32_t data_nums=0;
 
 // 定时器中断计数，类似于系统嘀嗒计数的用法
 // 使用volatile修饰是为了保证编译器优化的时候确保不会将它优化掉
-static volatile unsigned long TimerCounter = 0;
-
-void delay_ms(unsigned long ms) {
-    HAL_Delay(ms);
-}
+static volatile unsigned long timer_counter = 0;
 
 /* USER CODE END PV */
 
@@ -85,8 +82,9 @@ static void MX_TIM1_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_CAN_Init(void);
-static void MX_RTC_Init(void);
+static void MX_DMA_Init(void);
 static void MX_TIM4_Init(void);
+static void MX_RTC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -97,9 +95,9 @@ uint16_t SPI_AS5048A_ReadData(void)
 {
     uint16_t angle_value;
     uint16_t command = 0xFFFF;
-    HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_RESET); //cs片选
+    HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_RESET); //cs片�??
     HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)&command, (uint8_t*)&angle_value, 1, 100);
-    HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_SET); //cs取消片选
+    HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_SET); //cs取消片�??
     angle_value = angle_value & 0x3FFF;
 
     return angle_value;
@@ -135,30 +133,32 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_ADC1_Init();
-  MX_I2C1_Init();
-  MX_I2C2_Init();
+//  MX_I2C1_Init();
+//  MX_I2C2_Init();
   MX_SPI1_Init();
-  MX_SPI2_Init();
+//  MX_SPI2_Init();
   MX_TIM1_Init();
   MX_TIM3_Init();
-  MX_USART2_UART_Init();
+//  MX_USART2_UART_Init();
   MX_USB_DEVICE_Init();
   MX_CAN_Init();
-  MX_RTC_Init();
+  MX_DMA_Init();
   MX_TIM4_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-  // USB和CAN不能同时使用，尝试过仅仅屏蔽MX_CAN_Init()是没有效果的，必须执行HAL_CAN_DeInit()
+  // USB Can not be used with CAN at same time. MX_CAN_Init()HAL_CAN_DeInit()
   if (HAL_CAN_DeInit(&hcan) != HAL_OK)
   {
       Error_Handler();
   }
-    HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1); // Motor A
-    HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2); // Motor B
-    HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3); // Motor C
 
-    HAL_TIM_Base_Start(&htim4); //开启TIM4, 1MHz，用于delay_us
+  //!< start pwm
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1); // Motor A
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2); // Motor B
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3); // Motor C
+  //!< for delay_us
+  HAL_TIM_Base_Start(&htim4);
 
-    uint16_t pwmVal = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -175,7 +175,10 @@ int main(void)
       float angle = SPI_AS5048A_ReadData() /16383.0 * 360.0;
       usb_printf("Angle is: %.4f\r\n", angle);
 
-      HAL_Delay(100);
+      HAL_GPIO_WritePin(DRV_EN_GPIO_Port, DRV_EN_Pin, GPIO_PIN_SET);
+
+      _writeDutyCycle3PWM(0.5, 0.2, 0.3);
+      HAL_Delay(1000);
 
   }
   /* USER CODE END 3 */
@@ -252,12 +255,12 @@ static void MX_ADC1_Init(void)
   /** Common config
   */
   hadc1.Instance = ADC1;
-  hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
-  hadc1.Init.ContinuousConvMode = DISABLE;
+  hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
+  hadc1.Init.ContinuousConvMode = ENABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.NbrOfConversion = 2;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
   {
     Error_Handler();
@@ -268,6 +271,15 @@ static void MX_ADC1_Init(void)
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_1;
+  sConfig.Rank = ADC_REGULAR_RANK_2;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -703,6 +715,22 @@ static void MX_USART2_UART_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -779,9 +807,16 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if(htim->Instance == htim4.Instance) {
-        TimerCounter ++;
+        timer_counter ++;
     }
 }
+
+void _writeDutyCycle3PWM(float dc_a, float dc_b, float dc_c) {
+    __HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_1, dc_a*PWM_RANGE);
+    __HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_2, dc_b*PWM_RANGE);
+    __HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_3, dc_c*PWM_RANGE);
+}
+
 /* USER CODE END 4 */
 
 /**

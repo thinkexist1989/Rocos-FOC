@@ -7,7 +7,7 @@
 #include <stm32f1xx_hal.h>
 
 extern TIM_HandleTypeDef htim4;
-extern unsigned long TimerCounter = 0;
+extern unsigned long timer_counter = 0;
 
 void delay_us(unsigned long us) {
     __HAL_TIM_SetCounter(&htim4, 0);  // set the counter value a 0
@@ -19,7 +19,7 @@ unsigned long timestamp_us() {
     static uint64_t OldTimeVal;
     uint64_t NewTimeVal;
 
-    NewTimeVal = (TimerCounter * 65536) + TIM2->CNT;
+    NewTimeVal = (timer_counter * 65536) + TIM4->CNT;
 
     // 当计算出来的时间值小于上一个时间值的时候，说明在函数计算的期间发生了TIM2事件中断，此时应该补正时间值。
     if (NewTimeVal < OldTimeVal) NewTimeVal += 65536;
