@@ -122,7 +122,7 @@ size_t Print::print(double n, int digits)
 //  return x.printTo(*this);
 //}
 
-size_t Print::println(void)
+size_t Print::println()
 {
   return write("\r\n");
 }
@@ -256,7 +256,7 @@ size_t Print::printFloat(double number, uint8_t digits)
   while (digits-- > 0)
   {
     remainder *= 10.0;
-    unsigned int toPrint = (unsigned int)(remainder);
+    auto toPrint = (unsigned int)(remainder);
     n += print(toPrint);
     remainder -= toPrint; 
   } 

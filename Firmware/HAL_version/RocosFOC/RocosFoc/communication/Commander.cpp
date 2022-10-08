@@ -25,40 +25,40 @@ void Commander::add(char id, CommandCallback onCommand, char* label ){
 
 void Commander::run(){
   if(!com_port) return;
-//  run(*com_port, eol);
+  run(*com_port, eol);
 }
 
-//void Commander::run(Stream& serial, char eol){
-//  Stream* tmp = com_port; // save the serial instance
-//  char eol_tmp = this->eol;
-//  this->eol = eol;
-//  com_port = &serial;
-//
-//  // a string to hold incoming data
-//  while (serial.available()) {
-//    // get the new byte:
-//    int ch = serial.read();
-//    received_chars[rec_cnt++] = (char)ch;
-//    // end of user input
-//    if(echo)
-//      print((char)ch);
-//    if (isSentinel(ch)) {
-//      // execute the user command
-//      run(received_chars);
-//
-//      // reset the command buffer
-//      received_chars[0] = 0;
-//      rec_cnt=0;
-//    }
-//    if (rec_cnt>=MAX_COMMAND_LENGTH) { // prevent buffer overrun if message is too long
-//        received_chars[0] = 0;
-//        rec_cnt=0;
-//    }
-//  }
-//
-//  com_port = tmp; // reset the instance to the internal value
-//  this->eol = eol_tmp;
-//}
+void Commander::run(Print& serial, char eol){
+  Print* tmp = com_port; // save the serial instance
+  char eol_tmp = this->eol;
+  this->eol = eol;
+  com_port = &serial;
+
+  // a string to hold incoming data
+  while (serial.available()) {
+    // get the new byte:
+    int ch = serial.read();
+    received_chars[rec_cnt++] = (char)ch;
+    // end of user input
+    if(echo)
+      print((char)ch);
+    if (isSentinel(ch)) {
+      // execute the user command
+      run(received_chars);
+
+      // reset the command buffer
+      received_chars[0] = 0;
+      rec_cnt=0;
+    }
+    if (rec_cnt>=MAX_COMMAND_LENGTH) { // prevent buffer overrun if message is too long
+        received_chars[0] = 0;
+        rec_cnt=0;
+    }
+  }
+
+  com_port = tmp; // reset the instance to the internal value
+  this->eol = eol_tmp;
+}
 
 void Commander::run(char* user_input){
   // execute the user command

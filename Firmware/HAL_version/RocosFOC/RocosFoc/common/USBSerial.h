@@ -19,42 +19,41 @@
 #ifndef _USBSERIAL_H_
 #define _USBSERIAL_H_
 
-#if defined (USBCON) && defined(USBD_USE_CDC)
-#include "Stream.h"
+#include "Print.h"
 #include "usbd_core.h"
 
 //================================================================================
 // Serial over CDC
-class USBSerial : public Stream {
+class USBSerial : public Print {
   public:
-    void begin(void);
+    void begin();
     void begin(uint32_t);
     void begin(uint32_t, uint8_t);
-    void end(void);
+    void end();
 
-    virtual int available(void);
-    virtual int availableForWrite(void);
-    virtual int peek(void);
-    virtual int read(void);
+    virtual int available();
+    int availableForWrite() override;
+    virtual int peek();
+    virtual int read();
     virtual size_t readBytes(char *buffer, size_t length);  // read chars from stream into buffer
     virtual size_t readBytesUntil(char terminator, char *buffer, size_t length);  // as readBytes with terminator character
-    virtual void flush(void);
-    virtual size_t write(uint8_t);
-    virtual size_t write(const uint8_t *buffer, size_t size);
+    void flush() override;
+    size_t write(uint8_t) override;
+    size_t write(const uint8_t *buffer, size_t size) override;
     using Print::write; // pull in write(str) from Print
-    operator bool(void);
+    explicit operator bool();
 
     // These return the settings specified by the USB host for the
     // serial port. These aren't really used, but are offered here
     // in case a sketch wants to act on these settings.
-    uint32_t baud();
-    uint8_t stopbits();
-    uint8_t paritytype();
-    uint8_t numbits();
+    static uint32_t baud();
+    static uint8_t stopbits();
+    static uint8_t paritytype();
+    static uint8_t numbits();
 
     void dtr(bool enable);
-    bool dtr();
-    bool rts();
+    static bool dtr();
+    static bool rts();
     enum {
       ONE_STOP_BIT = 0,
       ONE_AND_HALF_STOP_BIT = 1,
@@ -70,5 +69,5 @@ class USBSerial : public Stream {
 };
 
 extern USBSerial SerialUSB;
-#endif /* USBCON */
+
 #endif /* _USBSERIAL_H_ */

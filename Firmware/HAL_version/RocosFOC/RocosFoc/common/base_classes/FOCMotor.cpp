@@ -91,7 +91,7 @@ void FOCMotor::monitor() {
   if( !monitor_downsample || monitor_cnt++ < monitor_downsample ) return;
   monitor_cnt = 0;
   if(!monitor_port) return;
-  bool printed = 0;
+  bool printed = false;
 
   if(monitor_variables & _MON_TARGET){
     monitor_port->print(target,4);
