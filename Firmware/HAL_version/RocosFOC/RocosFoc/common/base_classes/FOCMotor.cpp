@@ -1,5 +1,5 @@
 #include "FOCMotor.h"
-//#include "../../communication/SimpleFOCDebug.h"
+#include "../../communication/SimpleFOCDebug.h"
 
 /**
  * Default constructor - setting all variabels to default values
@@ -79,65 +79,65 @@ float FOCMotor::electricalAngle(){
  *  Monitoring functions
  */
 // function implementing the monitor_port setter
-//void FOCMotor::useMonitoring(Print &print){
-//  monitor_port = &print; //operate on the address of print
-//  SimpleFOCDebug::enable(&print);
-//  SIMPLEFOC_DEBUG("MOT: Monitor enabled!");
-//}
+void FOCMotor::useMonitoring(Print &print){
+  monitor_port = &print; //operate on the address of print
+  SimpleFOCDebug::enable(&print);
+  SIMPLEFOC_DEBUG("MOT: Monitor enabled!");
+}
 
 // utility function intended to be used with serial plotter to monitor motor variables
 // significantly slowing the execution down!!!!
-//void FOCMotor::monitor() {
-//  if( !monitor_downsample || monitor_cnt++ < monitor_downsample ) return;
-//  monitor_cnt = 0;
-//  if(!monitor_port) return;
-//  bool printed = 0;
-//
-//  if(monitor_variables & _MON_TARGET){
-//    monitor_port->print(target,4);
-//    monitor_port->print("\t");
-//    printed= true;
-//  }
-//  if(monitor_variables & _MON_VOLT_Q) {
-//    monitor_port->print(voltage.q,4);
-//    monitor_port->print("\t");
-//    printed= true;
-//  }
-//  if(monitor_variables & _MON_VOLT_D) {
-//    monitor_port->print(voltage.d,4);
-//    monitor_port->print("\t");
-//    printed= true;
-//  }
-//  // read currents if possible - even in voltage mode (if current_sense available)
-//  if(monitor_variables & _MON_CURR_Q || monitor_variables & _MON_CURR_D) {
-//    DQCurrent_s c = current;
-//    if( current_sense && torque_controller != TorqueControlType::foc_current ){
-//      c = current_sense->getFOCCurrents(electrical_angle);
-//      c.q = LPF_current_q(c.q);
-//      c.d = LPF_current_d(c.d);
-//    }
-//    if(monitor_variables & _MON_CURR_Q) {
-//      monitor_port->print(c.q*1000, 2); // mAmps
-//      monitor_port->print("\t");
-//      printed= true;
-//    }
-//    if(monitor_variables & _MON_CURR_D) {
-//      monitor_port->print(c.d*1000, 2); // mAmps
-//      monitor_port->print("\t");
-//      printed= true;
-//    }
-//  }
-//
-//  if(monitor_variables & _MON_VEL) {
-//    monitor_port->print(shaft_velocity,4);
-//    monitor_port->print("\t");
-//    printed= true;
-//  }
-//  if(monitor_variables & _MON_ANGLE) {
-//    monitor_port->print(shaft_angle,4);
-//    printed= true;
-//  }
-//  if(printed) monitor_port->println();
-//
-//}
+void FOCMotor::monitor() {
+  if( !monitor_downsample || monitor_cnt++ < monitor_downsample ) return;
+  monitor_cnt = 0;
+  if(!monitor_port) return;
+  bool printed = 0;
+
+  if(monitor_variables & _MON_TARGET){
+    monitor_port->print(target,4);
+    monitor_port->print("\t");
+    printed= true;
+  }
+  if(monitor_variables & _MON_VOLT_Q) {
+    monitor_port->print(voltage.q,4);
+    monitor_port->print("\t");
+    printed= true;
+  }
+  if(monitor_variables & _MON_VOLT_D) {
+    monitor_port->print(voltage.d,4);
+    monitor_port->print("\t");
+    printed= true;
+  }
+  // read currents if possible - even in voltage mode (if current_sense available)
+  if(monitor_variables & _MON_CURR_Q || monitor_variables & _MON_CURR_D) {
+    DQCurrent_s c = current;
+    if( current_sense && torque_controller != TorqueControlType::foc_current ){
+      c = current_sense->getFOCCurrents(electrical_angle);
+      c.q = LPF_current_q(c.q);
+      c.d = LPF_current_d(c.d);
+    }
+    if(monitor_variables & _MON_CURR_Q) {
+      monitor_port->print(c.q*1000, 2); // mAmps
+      monitor_port->print("\t");
+      printed= true;
+    }
+    if(monitor_variables & _MON_CURR_D) {
+      monitor_port->print(c.d*1000, 2); // mAmps
+      monitor_port->print("\t");
+      printed= true;
+    }
+  }
+
+  if(monitor_variables & _MON_VEL) {
+    monitor_port->print(shaft_velocity,4);
+    monitor_port->print("\t");
+    printed= true;
+  }
+  if(monitor_variables & _MON_ANGLE) {
+    monitor_port->print(shaft_angle,4);
+    printed= true;
+  }
+  if(printed) monitor_port->println();
+
+}
 
