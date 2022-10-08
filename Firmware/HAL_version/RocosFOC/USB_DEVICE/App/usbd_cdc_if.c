@@ -264,14 +264,7 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
 
-  // 解析数据
-  if(!get_data_flag) data_nums = 0;
-  for(int i =0; i < *Len; i++) {
-      buf[i + data_nums] = *Buf++;
-  }
-  data_nums += *Len;
-  buf[data_nums]='\0';
-  get_data_flag = 1;
+  UsbdCdcRecieveFsCallback(Buf, Len);
 
   return (USBD_OK);
   /* USER CODE END 6 */
@@ -313,6 +306,11 @@ void usb_printf(const char* format, ...)
     length = vsnprintf((char*)buff, APP_TX_DATA_SIZE, (char*)format, args);
     va_end(args);
     CDC_Transmit_FS(buff, length);
+}
+
+__weak void UsbdCdcRecieveFsCallback(uint8_t *Buf, uint32_t *Len) {
+    UNUSED(Buf);
+    UNUSED(Len);
 }
 /* USER CODE END PRIVATE_FUNCTIONS_IMPLEMENTATION */
 

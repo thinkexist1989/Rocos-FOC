@@ -44,8 +44,10 @@ class Commander
      * @param eol - the end of line sentinel character
      * @param echo - echo last typed character (for command line feedback)
      */
-//    Commander(Stream &serial, char eol = '\n', bool echo = false);
+    Commander(Print &serial, char eol = '\n', bool echo = false);
     Commander(char eol = '\n', bool echo = false);
+
+    ~Commander();
 
     /**
      * Function reading the serial port and firing callbacks that have been added to the commander
@@ -70,6 +72,7 @@ class Commander
      * @param eol - temporary end of line sentinel
      */
 //    void run(Stream &reader, char eol = '\n');
+    void run(uint8_t *Buf, uint32_t *Len);
     void run(Print &reader, char eol = '\n');
     /**
      * Function reading the string of user input and firing callbacks that have been added to the commander

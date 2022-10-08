@@ -61,15 +61,14 @@ extern SPI_HandleTypeDef hspi1;
 extern SPI_HandleTypeDef hspi2;
 
 extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
 
 extern UART_HandleTypeDef huart2;
 
+extern unsigned long timer_counter;
 
-extern uint8_t get_data_flag;
-extern uint8_t buf[];
-extern uint32_t data_nums;
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
