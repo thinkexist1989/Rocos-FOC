@@ -72,7 +72,7 @@ class Commander
      * @param eol - temporary end of line sentinel
      */
 //    void run(Stream &reader, char eol = '\n');
-    void run(uint8_t *Buf, uint32_t *Len);
+    void run(uint8_t *Buf, uint32_t *Len); //!< Added by Yang Luo, Used in callback function UsbdCdcRecieveFsCallback()
     void run(Print &reader, char eol = '\n');
     /**
      * Function reading the string of user input and firing callbacks that have been added to the commander

@@ -29,6 +29,9 @@ void BLDCDriver3PWM::disable()
 int BLDCDriver3PWM::init() {
   // sanity check for the voltage limit configuration
   if(!_isset(voltage_limit) || voltage_limit > voltage_power_supply) voltage_limit =  voltage_power_supply;
+
+  initialized = true;
+  return true;
 }
 
 
@@ -36,9 +39,13 @@ int BLDCDriver3PWM::init() {
 // Set voltage to the pwm pin
 void BLDCDriver3PWM::setPhaseState(int s) {
   // disable if needed
-    HAL_GPIO_WritePin(DRV_EN_GPIO_Port,
-                      DRV_EN_Pin,
-                      s == _HIGH_IMPEDANCE ? GPIO_PIN_RESET : GPIO_PIN_SET);
+//    if( _isset(enableA_pin) &&  _isset(enableB_pin)  && _isset(enableC_pin) ){
+//        digitalWrite(enableA_pin, sa == _HIGH_IMPEDANCE ? LOW : HIGH);
+//        digitalWrite(enableB_pin, sb == _HIGH_IMPEDANCE ? LOW : HIGH);
+//        digitalWrite(enableC_pin, sc == _HIGH_IMPEDANCE ? LOW : HIGH);
+//    HAL_GPIO_WritePin(DRV_EN_GPIO_Port,
+//                      DRV_EN_Pin,
+//                      s == _HIGH_IMPEDANCE ? GPIO_PIN_RESET : GPIO_PIN_SET);
 
 }
 

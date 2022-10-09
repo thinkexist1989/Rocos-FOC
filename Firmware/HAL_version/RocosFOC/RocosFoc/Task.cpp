@@ -6,6 +6,8 @@
 #include "usbd_cdc_if.h"
 #include <SimpleFOC.h>
 
+const char* target_string = "target velocity";
+const char* motor_string = "motor cmd";
 
 //!<<<<<<<<<<<<<<Variable Definition>>>>>>>>>>>>>>>>>!//
 MagneticSensorSPI sensor;
@@ -70,7 +72,8 @@ void TaskSetup(void) {
 
     motor.init();
 
-    commander.add('T', doTarget, "target velocity");
+    commander.add('T', doTarget, const_cast<char *>(target_string));
+    commander.add('M', doMotor, const_cast<char *>(motor_string));
 
     SerialUSB.println(F("Double motor sketch ready."));
 
@@ -78,6 +81,7 @@ void TaskSetup(void) {
 
 }
 
+//!<<<<<<<<<<<<<<<<<<<<Loop>>>>>>>>>>>>>>>>>>>//
 /**
  * @description TaskDo Wrap c/cpp for cycling call, used inside while(1)
  */
