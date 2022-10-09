@@ -57,10 +57,10 @@ void TaskSetup(void) {
 //    motor.controller = MotionControlType::velocity_openloop;
 //    motor.torque_controller = TorqueControlType::voltage;
     motor.controller = MotionControlType::velocity;
-    motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
+//    motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
     motor.torque_controller = TorqueControlType::voltage;
 
-    motor.PID_velocity.P = 0.05;
+    motor.PID_velocity.P = 0.5;
     motor.PID_velocity.I = 1;
     motor.PID_velocity.D = 0;
 
@@ -79,9 +79,9 @@ void TaskSetup(void) {
     commander.add('T', doTarget, const_cast<char *>(target_string));
     commander.add('M', doMotor, const_cast<char *>(motor_string));
 
-    SerialUSB.println(F("Double motor sketch ready."));
+//    SerialUSB.println(F("Double motor sketch ready."));
 
-    _delay(1000);
+    _delay(100);
 
 }
 
@@ -120,7 +120,5 @@ void TaskDo(void) {
     // significantly slowing the execution down!!!!
     // motor.monitor();
     motor.monitor();
-
-//    delay_ms(500);
 
 }

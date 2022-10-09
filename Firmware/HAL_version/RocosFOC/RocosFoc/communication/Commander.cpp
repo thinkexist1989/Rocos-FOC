@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include "Commander.h"
 #include <ctype.h>
+#include "usbd_cdc_if.h"
 
 #define F(msg) (msg)
 
@@ -10,6 +11,7 @@ Commander::Commander(Print& serial, char eol, bool echo){
   com_port = &serial;
   this->eol = eol;
   this->echo = echo;
+  commander_ptr = this;
 }
 
 Commander::Commander(char eol, bool echo){
@@ -641,8 +643,9 @@ void Commander::run(uint8_t *Buf, uint32_t *Len) {
 
     if (echo)
         print(received_chars);
-    if (isSentinel(received_chars[0])) {
+    if (isSentinel(received_chars[*Len - 1])) { //!< Judge the last character is '\n'
         // execute the user command
+//        usb_printf("correct");
         run(received_chars);
     }
 }
