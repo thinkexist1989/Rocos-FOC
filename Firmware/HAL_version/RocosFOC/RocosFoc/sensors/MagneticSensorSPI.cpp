@@ -14,7 +14,7 @@ void MagneticSensorSPI::init(bool faseMode) {
     if(fast_mode)
         read_pointer = &MagneticSensorSPI::read;
     else
-        read_pointer = &MagneticSensorSPI::faseRead;
+        read_pointer = &MagneticSensorSPI::fastRead;
 
     cpr = pow(2, bit_resolution);
 
@@ -81,7 +81,7 @@ uint16_t MagneticSensorSPI::read(uint16_t angle_register) {
 * Takes the address of the register as a 16 bit word
 * Returns the value of the register
 */
-uint16_t MagneticSensorSPI::faseRead(uint16_t angle_register) {
+uint16_t MagneticSensorSPI::fastRead(uint16_t angle_register) {
     uint16_t command = angle_register;
 
     uint16_t angle_value;

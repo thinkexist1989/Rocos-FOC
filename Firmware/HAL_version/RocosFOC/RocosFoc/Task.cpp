@@ -17,7 +17,7 @@ BLDCMotor motor = BLDCMotor(14);
 BLDCDriver3PWM driver = BLDCDriver3PWM();
 
 //目标变量
-float target_velocity = 5;
+float target_velocity = 10;
 
 Commander commander = Commander(SerialUSB);
 
@@ -46,16 +46,19 @@ uint16_t SPI_AS5048A_ReadData(void)
  * @description TaskSetup Wrap c/cpp for initialization, used before while(1)
  */
 void TaskSetup(void) {
-//    sensor.init();
+    sensor.init();
 
-//    motor.linkSensor(&sensor);
+    motor.linkSensor(&sensor);
 
     driver.voltage_power_supply = 24.0;
     driver.init();
     motor.linkDriver(&driver);
 
-    motor.controller = MotionControlType::velocity_openloop;
+//    motor.controller = MotionControlType::velocity_openloop;
 //    motor.torque_controller = TorqueControlType::voltage;
+    motor.controller = MotionControlType::velocity;
+    motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
+    motor.torque_controller = TorqueControlType::voltage;
 
     motor.PID_velocity.P = 0.05;
     motor.PID_velocity.I = 1;
@@ -101,12 +104,14 @@ void TaskDo(void) {
 //      _writeDutyCycle3PWM(0.5, 0.2, 0.3);
 //      HAL_Delay(1000);
 
-//    motor.loopFOC();
+
 
     motor.move(target_velocity);
 
+    motor.loopFOC();
+
     motor.monitor();
 
-    delay_ms(500);
+//    delay_ms(500);
 
 }

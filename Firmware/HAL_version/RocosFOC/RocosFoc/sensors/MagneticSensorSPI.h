@@ -39,7 +39,7 @@ class MagneticSensorSPI: public Sensor{
     /** Read one SPI register value */
     uint16_t read(uint16_t angle_register);
     /** Fast Read one SPI register value */
-    uint16_t faseRead(uint16_t angle_register);
+    uint16_t fastRead(uint16_t angle_register);
     /** Calculate parity value  */
     byte spiCalcEvenParity(word value);
 
