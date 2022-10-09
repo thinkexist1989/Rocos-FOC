@@ -74,6 +74,7 @@ void TaskSetup(void) {
     motor.monitor_variables = _MON_TARGET | _MON_VEL | _MON_ANGLE;
 
     motor.init();
+    motor.initFOC(); //align sensor and start FOC
 
     commander.add('T', doTarget, const_cast<char *>(target_string));
     commander.add('M', doMotor, const_cast<char *>(motor_string));
@@ -104,12 +105,20 @@ void TaskDo(void) {
 //      _writeDutyCycle3PWM(0.5, 0.2, 0.3);
 //      HAL_Delay(1000);
 
-
-
+    // main FOC algorithm function
+    // the faster you run this function the better
+    // Arduino UNO loop  ~1kHz
+    // Bluepill loop ~10kHz
+    motor.loopFOC();
+    // Motion control function
+    // velocity, position or voltage (defined in motor.controller)
+    // this function can be run at much lower frequency than loopFOC() function
+    // You can also use motor.move() and set the motor.target in the code
     motor.move(target_velocity);
 
-    motor.loopFOC();
-
+    // function intended to be used with serial plotter to monitor motor variables
+    // significantly slowing the execution down!!!!
+    // motor.monitor();
     motor.monitor();
 
 //    delay_ms(500);
