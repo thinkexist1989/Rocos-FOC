@@ -69,31 +69,40 @@ void Commander::run(char* user_input){
   // execute the user command
   char id = user_input[0];
   switch(id){
-    case CMD_SCAN:
+    case CMD_SCAN: //!< modified by Yang Luo
       for(int i=0; i < call_count; i++){
-          print(call_ids[i]);
-          print(":");
-          if(call_label[i]) println(call_label[i]);
-          else println("");
+          send_buffer += call_ids[i];
+          send_buffer += ":";
+          if(call_label[i])
+              send_buffer += call_label[i];
+          send_buffer += "\r\n";
       }
+      print(send_buffer.c_str());
+      send_buffer.clear();
       break;
-    case CMD_VERBOSE:
+    case CMD_VERBOSE: //!< modified by Yang Luo
       if(!isSentinel(user_input[1])) verbose = (VerboseMode)atoi(&user_input[1]);
-      printVerbose(F("Verb:"));
+      send_buffer += "Verb:";
       switch (verbose){
       case VerboseMode::nothing:
-        println(F("off!"));
+          send_buffer += "off!";
         break;
       case VerboseMode::on_request:
       case VerboseMode::user_friendly:
-        println(F("on!"));
+          send_buffer += "on!";
         break;
       }
+      send_buffer += "\r\n";
+      print(send_buffer.c_str());
+      send_buffer.clear();
       break;
-    case CMD_DECIMAL:
+    case CMD_DECIMAL: //!< modified by Yang Luo
       if(!isSentinel(user_input[1])) decimal_places = atoi(&user_input[1]);
-      printVerbose(F("Decimal:"));
-      println(decimal_places);
+      send_buffer += "Decimal:";
+      send_buffer += std::to_string(decimal_places);
+      send_buffer += "\r\n";
+      print(send_buffer.c_str());
+      send_buffer.clear();
       break;
     default:
       for(int i=0; i < call_count; i++){

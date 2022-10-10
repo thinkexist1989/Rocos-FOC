@@ -228,38 +228,60 @@ size_t Print::printFloat(double number, uint8_t digits)
   if (number > 4294967040.0) return print ("ovf");  // constant determined empirically
   if (number <-4294967040.0) return print ("ovf");  // constant determined empirically
   
-  // Handle negative numbers
-  if (number < 0.0)
-  {
-     n += print('-');
-     number = -number;
-  }
+//  // Handle negative numbers
+//  if (number < 0.0)
+//  {
+//     n += print('-');
+//     number = -number;
+//  }
+//
+//  // Round correctly so that print(1.999, 2) prints as "2.00"
+//  double rounding = 0.5;
+//  for (uint8_t i=0; i<digits; ++i)
+//    rounding /= 10.0;
+//
+//  number += rounding;
+//
+//  // Extract the integer part of the number and print it
+//  unsigned long int_part = (unsigned long)number;
+//  double remainder = number - (double)int_part;
+//  n += print(int_part);
+//
+//  // Print the decimal point, but only if there are digits beyond
+//  if (digits > 0) {
+//    n += print('.');
+//  }
+//
+//  // Extract digits from the remainder one at a time
+//  while (digits-- > 0)
+//  {
+//    remainder *= 10.0;
+//    auto toPrint = (unsigned int)(remainder);
+//    n += print(toPrint);
+//    remainder -= toPrint;
+//  }
+//
+//  return n;
 
-  // Round correctly so that print(1.999, 2) prints as "2.00"
-  double rounding = 0.5;
-  for (uint8_t i=0; i<digits; ++i)
-    rounding /= 10.0;
-  
-  number += rounding;
+    char send_buf[30] = {'\0'};
+    switch (digits) {
+        case 2:
+            sprintf(send_buf, "%.2f", number);
+            break;
+        case 3:
+            sprintf(send_buf, "%.3f", number);
+            break;
+        case 4:
+            sprintf(send_buf, "%.4f", number);
+            break;
+        case 5:
+            sprintf(send_buf, "%.5f", number);
+            break;
+        default:
+            break;
+    }
 
-  // Extract the integer part of the number and print it
-  unsigned long int_part = (unsigned long)number;
-  double remainder = number - (double)int_part;
-  n += print(int_part);
+    print(send_buf);
 
-  // Print the decimal point, but only if there are digits beyond
-  if (digits > 0) {
-    n += print('.'); 
-  }
-
-  // Extract digits from the remainder one at a time
-  while (digits-- > 0)
-  {
-    remainder *= 10.0;
-    auto toPrint = (unsigned int)(remainder);
-    n += print(toPrint);
-    remainder -= toPrint; 
-  } 
-  
-  return n;
+    return strlen(send_buf);
 }

@@ -57,8 +57,9 @@ void TaskSetup(void) {
 //    motor.controller = MotionControlType::velocity_openloop;
 //    motor.torque_controller = TorqueControlType::voltage;
     motor.controller = MotionControlType::velocity;
-//    motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
+    motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
     motor.torque_controller = TorqueControlType::voltage;
+
 
     motor.PID_velocity.P = 0.5;
     motor.PID_velocity.I = 1;
@@ -70,7 +71,7 @@ void TaskSetup(void) {
 
     motor.useMonitoring(SerialUSB);
 
-    motor.monitor_downsample = 0;
+//    motor.monitor_downsample = 10; // default is 10
     motor.monitor_variables = _MON_TARGET | _MON_VEL | _MON_ANGLE;
 
     motor.init();
@@ -118,8 +119,7 @@ void TaskDo(void) {
 
     // function intended to be used with serial plotter to monitor motor variables
     // significantly slowing the execution down!!!!
-    // motor.monitor();
-    motor.monitor();
+//     motor.monitor();
 
 
 }

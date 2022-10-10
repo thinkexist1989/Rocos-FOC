@@ -6,6 +6,8 @@
 #include "../common/lowpass_filter.h"
 #include "commands.h"
 
+#include <string>
+
 
 #define MAX_COMMAND_LENGTH 20
 
@@ -253,6 +255,8 @@ class Commander
     // helping variable for serial communication reading
     char received_chars[MAX_COMMAND_LENGTH] = {0}; //!< so far received user message - waiting for newline
     int rec_cnt = 0; //!< number of characters receives
+
+    std::string send_buffer;
 
     // serial printing functions
     /**
