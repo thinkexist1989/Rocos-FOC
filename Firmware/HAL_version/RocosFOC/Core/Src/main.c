@@ -43,22 +43,14 @@
  ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
-CAN_HandleTypeDef hcan;
-
-I2C_HandleTypeDef hi2c1;
-I2C_HandleTypeDef hi2c2;
-
 RTC_HandleTypeDef hrtc;
 
 SPI_HandleTypeDef hspi1;
-SPI_HandleTypeDef hspi2;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
-
-UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
@@ -71,14 +63,9 @@ unsigned long timer_counter = 0;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
-static void MX_I2C1_Init(void);
-static void MX_I2C2_Init(void);
 static void MX_SPI1_Init(void);
-static void MX_SPI2_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM3_Init(void);
-static void MX_USART2_UART_Init(void);
-static void MX_CAN_Init(void);
 static void MX_DMA_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_RTC_Init(void);
@@ -121,15 +108,10 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_ADC1_Init();
-  MX_I2C1_Init();
-  MX_I2C2_Init();
   MX_SPI1_Init();
-  MX_SPI2_Init();
   MX_TIM1_Init();
   MX_TIM3_Init();
-  MX_USART2_UART_Init();
   MX_USB_DEVICE_Init();
-  MX_CAN_Init();
   MX_DMA_Init();
   MX_TIM4_Init();
   MX_RTC_Init();
@@ -266,123 +248,6 @@ static void MX_ADC1_Init(void)
 }
 
 /**
-  * @brief CAN Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_CAN_Init(void)
-{
-
-  /* USER CODE BEGIN CAN_Init 0 */
-
-  /* USER CODE END CAN_Init 0 */
-
-  /* USER CODE BEGIN CAN_Init 1 */
-
-  /* USER CODE END CAN_Init 1 */
-  hcan.Instance = CAN1;
-  hcan.Init.Prescaler = 16;
-  hcan.Init.Mode = CAN_MODE_NORMAL;
-  hcan.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan.Init.TimeSeg1 = CAN_BS1_1TQ;
-  hcan.Init.TimeSeg2 = CAN_BS2_1TQ;
-  hcan.Init.TimeTriggeredMode = DISABLE;
-  hcan.Init.AutoBusOff = DISABLE;
-  hcan.Init.AutoWakeUp = DISABLE;
-  hcan.Init.AutoRetransmission = DISABLE;
-  hcan.Init.ReceiveFifoLocked = DISABLE;
-  hcan.Init.TransmitFifoPriority = DISABLE;
-  if (HAL_CAN_Init(&hcan) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN CAN_Init 2 */
-    //!< USB Can not be used with CAN at same time. MX_CAN_Init()HAL_CAN_DeInit()
-    if (HAL_CAN_DeInit(&hcan) != HAL_OK)
-    {
-        Error_Handler();
-    }
-  /* USER CODE END CAN_Init 2 */
-
-}
-
-/**
-  * @brief I2C1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_I2C1_Init(void)
-{
-
-  /* USER CODE BEGIN I2C1_Init 0 */
-
-  /* USER CODE END I2C1_Init 0 */
-
-  /* USER CODE BEGIN I2C1_Init 1 */
-
-  /* USER CODE END I2C1_Init 1 */
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
-  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c1.Init.OwnAddress1 = 0;
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN I2C1_Init 2 */
-    //!< DeInit by Yang Luo
-    if (HAL_I2C_DeInit(&hi2c1) != HAL_OK)
-    {
-        Error_Handler();
-    }
-  /* USER CODE END I2C1_Init 2 */
-
-}
-
-/**
-  * @brief I2C2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_I2C2_Init(void)
-{
-
-  /* USER CODE BEGIN I2C2_Init 0 */
-
-  /* USER CODE END I2C2_Init 0 */
-
-  /* USER CODE BEGIN I2C2_Init 1 */
-
-  /* USER CODE END I2C2_Init 1 */
-  hi2c2.Instance = I2C2;
-  hi2c2.Init.ClockSpeed = 100000;
-  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c2.Init.OwnAddress1 = 0;
-  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c2.Init.OwnAddress2 = 0;
-  hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  if (HAL_I2C_Init(&hi2c2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN I2C2_Init 2 */
-    //!< DeInit by Yang Luo
-    if (HAL_I2C_DeInit(&hi2c2) != HAL_OK)
-    {
-        Error_Handler();
-    }
-  /* USER CODE END I2C2_Init 2 */
-
-}
-
-/**
   * @brief RTC Initialization Function
   * @param None
   * @retval None
@@ -475,48 +340,6 @@ static void MX_SPI1_Init(void)
   /* USER CODE BEGIN SPI1_Init 2 */
 
   /* USER CODE END SPI1_Init 2 */
-
-}
-
-/**
-  * @brief SPI2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_SPI2_Init(void)
-{
-
-  /* USER CODE BEGIN SPI2_Init 0 */
-
-  /* USER CODE END SPI2_Init 0 */
-
-  /* USER CODE BEGIN SPI2_Init 1 */
-
-  /* USER CODE END SPI2_Init 1 */
-  /* SPI2 parameter configuration*/
-  hspi2.Instance = SPI2;
-  hspi2.Init.Mode = SPI_MODE_MASTER;
-  hspi2.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi2.Init.NSS = SPI_NSS_SOFT;
-  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-  hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi2.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN SPI2_Init 2 */
-    //!< DeInit by Yang Luo
-    if (HAL_SPI_DeInit(&hspi2) != HAL_OK)
-    {
-        Error_Handler();
-    }
-  /* USER CODE END SPI2_Init 2 */
 
 }
 
@@ -714,43 +537,6 @@ static void MX_TIM4_Init(void)
   /* USER CODE BEGIN TIM4_Init 2 */
 
   /* USER CODE END TIM4_Init 2 */
-
-}
-
-/**
-  * @brief USART2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART2_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART2_Init 0 */
-
-  /* USER CODE END USART2_Init 0 */
-
-  /* USER CODE BEGIN USART2_Init 1 */
-
-  /* USER CODE END USART2_Init 1 */
-  huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
-  huart2.Init.WordLength = UART_WORDLENGTH_8B;
-  huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_NONE;
-  huart2.Init.Mode = UART_MODE_TX_RX;
-  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART2_Init 2 */
-    //!< DeInit by Yang Luo
-    if (HAL_UART_DeInit(&huart2) != HAL_OK)
-    {
-        Error_Handler();
-    }
-  /* USER CODE END USART2_Init 2 */
 
 }
 

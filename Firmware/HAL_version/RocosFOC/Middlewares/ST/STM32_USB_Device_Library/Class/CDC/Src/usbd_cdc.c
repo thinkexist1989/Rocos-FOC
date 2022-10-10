@@ -684,10 +684,12 @@ static uint8_t  USBD_CDC_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)
     if ((pdev->ep_in[epnum].total_length > 0U) && ((pdev->ep_in[epnum].total_length % hpcd->IN_ep[epnum].maxpacket) == 0U))
     {
       /* Update the packet total length */
-      pdev->ep_in[epnum].total_length = 0U;
+//      pdev->ep_in[epnum].total_length = 0U;
 
       /* Send ZLP */
-      USBD_LL_Transmit(pdev, epnum, NULL, 0U);
+//      USBD_LL_Transmit(pdev, epnum, NULL, 0U);
+
+     hcdc->TxState = 0U;
     }
     else
     {

@@ -50,10 +50,6 @@ extern "C" {
 extern ADC_HandleTypeDef hadc1;
 extern DMA_HandleTypeDef hdma_adc1;
 
-extern CAN_HandleTypeDef hcan;
-
-extern I2C_HandleTypeDef hi2c1;
-extern I2C_HandleTypeDef hi2c2;
 
 extern RTC_HandleTypeDef hrtc;
 
@@ -64,8 +60,6 @@ extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
-
-extern UART_HandleTypeDef huart2;
 
 extern unsigned long timer_counter;
 
