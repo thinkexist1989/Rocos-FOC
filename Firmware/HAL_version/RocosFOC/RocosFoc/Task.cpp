@@ -121,10 +121,5 @@ void TaskDo(void) {
     // motor.monitor();
     motor.monitor();
 
-    SerialUSB.print("Welcome ");
-    SerialUSB.print("To ");
-    SerialUSB.print("My ");
-    SerialUSB.println("Rocos-FOC");
-
 
 }
