@@ -558,7 +558,7 @@ void Commander::lpf(LowPassFilter *lpf, char *user_cmd) {
 
     switch (cmd) {
         case SCMD_LPF_TF:      // Tf value change
-            printVerbose(F("Tf: "));
+            send_buffer += getVerbose(F("Tf: "));
             if (!GET) lpf->Tf = value;
 //            println(lpf->Tf);
             send_buffer += std::to_string(lpf->Tf);

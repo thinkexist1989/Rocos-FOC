@@ -71,7 +71,7 @@ void TaskSetup(void) {
 
     motor.useMonitoring(SerialUSB);
 
-//    motor.monitor_downsample = 10; // default is 10
+    motor.monitor_downsample = 0; // default is 10
     motor.monitor_variables = _MON_TARGET | _MON_VEL | _MON_ANGLE;
 
     motor.init();
