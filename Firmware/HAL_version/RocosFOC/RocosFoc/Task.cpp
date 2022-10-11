@@ -71,8 +71,8 @@ void TaskSetup(void) {
 
     motor.useMonitoring(SerialUSB);
 
-    motor.monitor_downsample = 0; // default is 10
-    motor.monitor_variables = _MON_TARGET | _MON_VEL | _MON_ANGLE;
+//    motor.monitor_downsample = 0; // default is 10
+//    motor.monitor_variables = _MON_TARGET | _MON_VEL | _MON_ANGLE;
 
     motor.init();
     motor.initFOC(); //align sensor and start FOC
@@ -91,20 +91,6 @@ void TaskSetup(void) {
  * @description TaskDo Wrap c/cpp for cycling call, used inside while(1)
  */
 void TaskDo(void) {
-//      if(get_data_flag) {
-//          usb_printf("get data:\r\n%s %d\r\n", buf, data_nums);
-//          get_data_flag = 0;
-//      }
-//      sensorSpi.update();
-//      float angle = sensorSpi.getAngle();
-//      usb_printf("Angle1 is: %.4f\r\n", angle);
-//      angle = SPI_AS5048A_ReadData() /16383.0 * 360.0;
-//      usb_printf("Angle2 is: %.4f\r\n", angle);
-//
-//      HAL_GPIO_WritePin(DRV_EN_GPIO_Port, DRV_EN_Pin, GPIO_PIN_SET);
-//
-//      _writeDutyCycle3PWM(0.5, 0.2, 0.3);
-//      HAL_Delay(1000);
 
     // main FOC algorithm function
     // the faster you run this function the better
