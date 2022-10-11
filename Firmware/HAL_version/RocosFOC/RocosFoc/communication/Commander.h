@@ -270,6 +270,12 @@ class Commander
      *  @param message - message to be printed
      */
 //    void printVerbose(const __FlashStringHelper *message);
+
+
+    std::string getVerbose(const char* message);
+
+    void printBuffer();
+    void printBufferln();
     /**
      *  print the numbers to the serial with desired decimal point number
      *  @param message - number to be printed

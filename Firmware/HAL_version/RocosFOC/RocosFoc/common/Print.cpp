@@ -21,9 +21,9 @@
  */
 
 #include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
+#include <cstdio>
+#include <cstring>
+#include <cmath>
 
 #include "Print.h"
 
@@ -53,10 +53,10 @@ size_t Print::write(const uint8_t *buffer, size_t size)
 //  return n;
 //}
 
-//size_t Print::print(const String &s)
-//{
-//  return write(s.c_str(), s.length());
-//}
+size_t Print::print(const std::string &s)
+{
+  return write(s.c_str(), s.length());
+}
 
 size_t Print::print(const char str[])
 {
@@ -223,8 +223,8 @@ size_t Print::printFloat(double number, uint8_t digits)
 { 
   size_t n = 0;
   
-  if (isnan(number)) return print("nan");
-  if (isinf(number)) return print("inf");
+  if (std::isnan(number)) return print("nan");
+  if (std::isinf(number)) return print("inf");
   if (number > 4294967040.0) return print ("ovf");  // constant determined empirically
   if (number <-4294967040.0) return print ("ovf");  // constant determined empirically
   
